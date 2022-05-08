@@ -4,6 +4,12 @@ import { useSelector, useDispatch } from 'react-redux'
 import { RootState } from "./app/store";
 import ReservationCard from "./components/ReservationCard";
 import { addReservation } from "./feautres/reservationSlice"
+import { db } from '../src/firebase-config'
+import { getFirestore, collection, getDocs } from 'firebase/firestore/lite';
+import { fetchDocsData } from '../src/feautres/functions/firebase'
+
+const reservationDatabase = collection(db, "reservations")
+
 function App() {
   const mounted = useRef(false)
 
@@ -23,6 +29,15 @@ function App() {
   useEffect(():any => {
     mounted.current = true
     return () => mounted.current = false
+  })
+
+  useEffect(():any => {
+    const getThatShit = async () => {
+      const reservationData = await getDocs(reservationDatabase)
+      console.log('reservationData', reservationData)
+    }
+
+    getThatShit()
   })
 
   return (

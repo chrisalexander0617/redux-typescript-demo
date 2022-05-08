@@ -1,10 +1,18 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { db } from '../firebase-config'
 import { getFirestore, collection, getDocs } from 'firebase/firestore/lite';
+import { fetchDocsData } from './functions/firebase'
 
 interface ReservationState {value:string[]}
 
 const reservationDatabase = collection(db, "reservations")
+
+
+
+const data = fetchDocsData(reservationDatabase)
+
+console.log('data', data)
+
 
 const initialState:ReservationState = {
     value:[],
