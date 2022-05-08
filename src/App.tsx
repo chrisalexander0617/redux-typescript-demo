@@ -1,5 +1,5 @@
 import "./App.css";
-import React, { useEffect, useState, useRef } from 'react'
+import React, { useEffect, useCallback, useState, useRef } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { RootState } from "./app/store";
 import ReservationCard from "./components/ReservationCard";
@@ -9,14 +9,20 @@ import { getFirestore, collection, getDocs } from 'firebase/firestore/lite';
 import { fetchDocsData } from '../src/feautres/functions/firebase'
 import { SetStateAction } from "react";
 
+interface ReservationTypeSchema { 
+  id:string, 
+  name:string
+}
+
 const reservationDatabase = collection(db, "reservations")
+// interface DocDataService extends Array<DocData>{}
 
 function App() {
   const mounted = useRef(false)
   // extracts the data from the Redux store state in store.tsx
   //const reservations = useSelector((state: RootState) => state.reservations.value)
 
-  const [reservationValues, setReservationvalues] = useState<String[]>([])
+  const [reservationValues, setReservationvalues] = useState<ReservationTypeSchema[]>([{id:'t23t23qt', name:'shit'}])
   const [inputValue, setInputValue] = useState("")
   
   // necessary to prevent syntax error
@@ -28,25 +34,24 @@ function App() {
     setInputValue("")
   }
 
+  const setStateFromDocsApiCall = useCallback( async () => {
+    const reservationData = await getDocs(reservationDatabase)
+    const mappedData = reservationData.docs.map(doc => ({...doc.data(), id:doc.id }))
+    console.log(typeof mappedData)
+    console.log('mappedData', mappedData)
+    // setReservationvalues([mappedData as any])
+  },[]) 
+
   useEffect(():any => {
     mounted.current = true
     return () => mounted.current = false
   })
 
   useEffect(():any => {
-    const getThatShit = async () => {
-      try {
-        const reservationData = await getDocs(reservationDatabase)
-        const mappedData = reservationData.docs.map(doc => ({...doc.data(), id:doc.id }))
-        // getting confused with setting the type for useState()
-        setReservationvalues(mappedData as any)
-       
-      } catch{}
+    if(mounted.current){
+      setStateFromDocsApiCall()
     }
-    if(mounted.current) {
-      getThatShit()
-    }
-  })
+  },[setStateFromDocsApiCall]);
 
   return (
     <div className="App">
@@ -55,13 +60,13 @@ function App() {
           <div>
             <h5 className="reservation-header">Reservations</h5>
             <div className="reservation-cards-container">
-              {reservationValues.length && reservationValues.map(reservation => {
-                return <ReservationCard name={reservation} />
+              {reservationValues&& reservationValues?.map(reservation => {
+                return <ReservationCard name={reservation.name}  />
               })}
             </div>
           </div>
           <div className="reservation-input-container">
-            <input value={inputValue} onChange={e => setInputValue(e.target.value)} />
+            <input value={inputValue} onChange={(e) => setInputValue(e.target.value)} />
             <button onClick={handleAddReservations}>Add</button>
           </div>
         </div>
