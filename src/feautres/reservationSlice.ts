@@ -1,6 +1,10 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { db } from '../firebase-config'
+import { getFirestore, collection, getDocs } from 'firebase/firestore/lite';
 
 interface ReservationState {value:string[]}
+
+const reservationDatabase = collection(db, "reservations")
 
 const initialState:ReservationState = {
     value:[],

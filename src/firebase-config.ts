@@ -1,4 +1,5 @@
 import { initializeApp } from 'firebase/app';
+import { getFirestore, collection, getDocs } from 'firebase/firestore/lite';
 
 const firebaseConfig = {
     apiKey: "AIzaSyD_gdHREGLkXg3dat_FBc_-sMvLeZ9gksg",
@@ -16,3 +17,7 @@ const app = initializeApp(firebaseConfig)
 
 // See Readme on how to run ts files in a node environment
 console.log('firbase', app) 
+
+// conifuring db that can me created 
+// from https://console.firebase.google.com/u/0/project/redux-firebase-14992/firestore
+export const db = getFirestore(app);

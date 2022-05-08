@@ -44,3 +44,12 @@ You don’t have to ever use `eject`. The curated feature set is suitable for sm
 You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
 To learn React, check out the [React documentation](https://reactjs.org/).
+
+
+## Running ts files with node
+
+Inside of `tsconfig.json`, added   "module": "CommonJS" and remove type module from package.json
+
+Example usage
+
+```ts-node filename.ts```
