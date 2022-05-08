@@ -7,16 +7,18 @@ import { addReservation } from "./feautres/reservationSlice"
 import { db } from '../src/firebase-config'
 import { getFirestore, collection, getDocs } from 'firebase/firestore/lite';
 import { fetchDocsData } from '../src/feautres/functions/firebase'
+import { SetStateAction } from "react";
 
 const reservationDatabase = collection(db, "reservations")
 
 function App() {
   const mounted = useRef(false)
-
   // extracts the data from the Redux store state in store.tsx
-  const reservations = useSelector((state: RootState) => state.reservations.value)
-  const [inputValue, setInputValue] = useState("")
+  //const reservations = useSelector((state: RootState) => state.reservations.value)
 
+  const [reservationValues, setReservationvalues] = useState<String[]>([])
+  const [inputValue, setInputValue] = useState("")
+  
   // necessary to prevent syntax error
   const dispatch = useDispatch()
 
@@ -33,11 +35,17 @@ function App() {
 
   useEffect(():any => {
     const getThatShit = async () => {
-      const reservationData = await getDocs(reservationDatabase)
-      console.log('reservationData', reservationData)
+      try {
+        const reservationData = await getDocs(reservationDatabase)
+        const mappedData = reservationData.docs.map(doc => ({...doc.data(), id:doc.id }))
+        // getting confused with setting the type for useState()
+        setReservationvalues(mappedData as any)
+       
+      } catch{}
     }
-
-    getThatShit()
+    if(mounted.current) {
+      getThatShit()
+    }
   })
 
   return (
@@ -47,7 +55,7 @@ function App() {
           <div>
             <h5 className="reservation-header">Reservations</h5>
             <div className="reservation-cards-container">
-              {reservations.map(reservation => {
+              {reservationValues.length && reservationValues.map(reservation => {
                 return <ReservationCard name={reservation} />
               })}
             </div>

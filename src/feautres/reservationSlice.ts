@@ -7,13 +7,6 @@ interface ReservationState {value:string[]}
 
 const reservationDatabase = collection(db, "reservations")
 
-
-
-const data = fetchDocsData(reservationDatabase)
-
-console.log('data', data)
-
-
 const initialState:ReservationState = {
     value:[],
 }

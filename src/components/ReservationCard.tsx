@@ -1,7 +1,7 @@
 import React from 'react';
 
 interface ReservationCardTypes {
-    name:string;
+    name:String;
 }
 
 export default function ReservationCard({name}:ReservationCardTypes){
