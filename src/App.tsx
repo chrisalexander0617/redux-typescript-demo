@@ -15,31 +15,32 @@ interface ReservationTypeSchema {
 }
 
 const reservationDatabase = collection(db, "reservations")
-// interface DocDataService extends Array<DocData>{}
 
 function App() {
   const mounted = useRef(false)
   // extracts the data from the Redux store state in store.tsx
   //const reservations = useSelector((state: RootState) => state.reservations.value)
 
-  const [reservationValues, setReservationvalues] = useState<ReservationTypeSchema[]>([{id:'t23t23qt', name:'shit'}])
+  const [reservationValues, setReservationvalues] = useState<ReservationTypeSchema[]>([])
   const [inputValue, setInputValue] = useState("")
   
   // necessary to prevent syntax error
-  const dispatch = useDispatch()
 
+  /* 
+  const dispatch = useDispatch()
   const handleAddReservations = () => {
     if(!inputValue) return;
     dispatch(addReservation(inputValue))
     setInputValue("")
-  }
+  } */ const handleAddReservations = () => {} // erase
 
   const setStateFromDocsApiCall = useCallback( async () => {
     const reservationData = await getDocs(reservationDatabase)
     const mappedData = reservationData.docs.map(doc => ({...doc.data(), id:doc.id }))
+    
     console.log(typeof mappedData)
-    console.log('mappedData', mappedData)
-    // setReservationvalues([mappedData as any])
+    console.log('mappedData!!!!!', mappedData)
+    setReservationvalues(() => mappedData as any)
   },[]) 
 
   useEffect(():any => {
@@ -60,7 +61,7 @@ function App() {
           <div>
             <h5 className="reservation-header">Reservations</h5>
             <div className="reservation-cards-container">
-              {reservationValues&& reservationValues?.map(reservation => {
+              {reservationValues?.map(reservation => {
                 return <ReservationCard name={reservation.name}  />
               })}
             </div>
