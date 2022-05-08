@@ -15,4 +15,4 @@ const app = initializeApp(firebaseConfig)
 // Test firebase connection by running ts-node firebase-config.ts
 
 //
-console.log('app', app)
+console.log('firbase', app) 
