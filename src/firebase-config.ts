@@ -14,5 +14,5 @@ const app = initializeApp(firebaseConfig)
 
 // Test firebase connection by running ts-node firebase-config.ts
 
-//
+// See Readme on how to run ts files in a node environment
 console.log('firbase', app) 
